@@ -1,0 +1,137 @@
+import pandas as pd
+df = pd.read_csv('RealEstate-USA.csv', delimiter=",")
+
+print("Columns:\n", df.columns)
+
+print("\nFull DataFrame:")
+print(df.to_string
+      (
+    buf=None,
+    columns=None,
+    col_space=10,
+    header=True,
+    index=True,
+    na_rep='NOT DEFINED',
+    float_format='{:,.2f}'.format,
+    justify='center',
+    max_rows=20,
+    max_cols=10,
+    show_dimensions=True,
+    decimal='.'
+)
+)
+
+print("\nData Types:\n", df.dtypes)
+
+from io import StringIO
+buffer = StringIO()
+df.info(buf=buffer, show_counts=True) 
+info_str = buffer.getvalue()
+print("\nDataFrame Info:\n", info_str)
+
+with open("df_info.txt", "w") as f:
+    df.info(buf=f)
+
+print("\nBottom 9 Rows of the DataFrame:")
+print(df.tail(9))
+
+print("\nCity Column:")
+print(df['city'])
+
+print("\nStreet Column:")
+print(df['street'])
+
+print("\nStreet and City Columns:")
+print(df[['street', 'city']])
+
+row_5 = df.loc[5]
+print("Row with index 5:\n", row_5)
+
+rows_3_5_7 = df.loc[[3, 5, 7]]
+print("Rows with index 3, 5, 7:\n", rows_3_5_7)
+
+rows_3_to_9 = df.loc[3:9]
+print("Rows from index 3 to 9:\n", rows_3_to_9)
+
+price_gt_100k = df.loc[df['price'] > 100]
+print("Rows where price > 100:\n", price_gt_100k)
+
+city_adjuntas = df.loc[df['city'] == "Adjuntas"]
+print('Rows where city is "Adjuntas":\n', city_adjuntas)
+
+adjuntas_price_lt_180500 = df.loc[(df['city'] == "Adjuntas") & (df['price'] < 180500)]
+print('Rows where city is "Adjuntas" and price < 180500:\n', adjuntas_price_lt_180500)
+
+row_7_selected_cols = df.loc[7, ['city', 'price', 'street', 'zip_code', 'acre_lot']]
+print('Index 7, selected columns:\n', row_7_selected_cols)
+
+cols_city_to_zip = df.loc[:, 'city':'zip_code']
+print('Columns from city to zip_code:\n', cols_city_to_zip)
+
+adjuntas_city_to_zip = df.loc[df['city'] == "Adjuntas", 'city':'zip_code']
+print('Rows with city Adjuntas, columns city to zip_code:\n', adjuntas_city_to_zip)
+
+row_5_iloc = df.iloc[4]
+print("5th row using iloc:\n", row_5_iloc)
+
+rows_multiple_iloc = df.iloc[[6, 8, 14]]
+print("7th, 9th, 15th rows using iloc:\n", rows_multiple_iloc)
+
+rows_slice_iloc = df.iloc[4:13]
+print("Rows 5 to 13 using iloc:\n", rows_slice_iloc)
+
+col_3_iloc = df.iloc[:, 2]
+print("3rd column using iloc:\n", col_3_iloc)
+
+cols_multi_iloc = df.iloc[:, [1, 3, 6]]
+print("2nd, 4th, 7th columns using iloc:\n", cols_multi_iloc)
+
+cols_slice_iloc = df.iloc[:, 1:5]
+print("Columns 2 to 5 using iloc:\n", cols_slice_iloc)
+
+combined_iloc = df.iloc[[6, 8, 14], [1, 3]]
+print("Combined row and column selection using iloc:\n", combined_iloc)
+
+combined_slice_iloc = df.iloc[[1, 5], 1:4]
+print("Combined slice of rows and columns using iloc:\n", combined_slice_iloc)
+
+new_row = {
+    'city': 'NewCity',
+    'price': 250000,
+    'street': '123 New St',
+    'zip_code': '99999',
+    'acre_lot': 0.5,   
+}
+
+df_dropped_2 = df.drop(index=2)
+print("DataFrame after dropping row with index 2:\n", df_dropped_2.head())
+
+df_dropped_4_to_7 = df.drop(index=range(4, 8))
+print("DataFrame after dropping rows with index 4 to 7:\n", df_dropped_4_to_7.head())
+
+df_dropped_house_size = df.drop(columns=['house_size'])
+print("DataFrame after deleting 'house_size' column:\n", df_dropped_house_size.head())
+
+df_dropped_cols = df.drop(columns=['house_size', 'state'])
+print("DataFrame after deleting 'house_size' and 'state' columns:\n", df_dropped_cols.head())
+
+df_renamed = df.rename(columns={'state': 'state_Changed'})
+print("DataFrame after renaming 'state' to 'state_Changed':\n", df_renamed.head())
+
+df_rename_index = df.rename(index={3: 5})
+print("DataFrame after renaming index 3 to 5:\n", df_rename_index.loc[[5]])
+
+df_query = df.query('price < 127400 and city != "Adjuntas"')
+print("Rows where price < 127400 and city != Adjuntas:\n", df_query)
+
+df_sorted_price = df.sort_values(by='price', ascending=True)
+print("DataFrame sorted by price ascending:\n", df_sorted_price.head())
+
+df_grouped = df.groupby('city')['price'].sum().reset_index()
+print("Sum of prices grouped by city:\n", df_grouped)
+
+df_no_na = df.dropna()
+print("DataFrame after dropping rows with missing values:\n", df_no_na)
+
+df_filled = df.fillna(0)
+print("DataFrame after filling NaN values with 0:\n", df_filled)
