@@ -1,0 +1,140 @@
+# real estate 
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+cities = ['Adjuntas', 'Juana Diaz', 'Mayaguez', 'San Sebastian', 'Ciales',
+          'Las Marias', 'Ponce', 'Isabela', 'Lares', 'Utuado']
+
+city_column = np.tile(cities, 10)
+
+prices = np.random.rand(100).cumsum()
+
+data = pd.DataFrame({
+    'city': city_column,
+    'price': prices
+})
+
+avg_prices = data.groupby('city', as_index=False)['price'].mean()
+
+sns.set_theme(style='darkgrid')
+sns.barplot(x='city', y='price', data=avg_prices, palette='viridis')
+
+plt.xticks(rotation=45)
+plt.title("Average Property Prices by City")
+plt.ylabel("Average Price")
+plt.xlabel("City")
+
+
+for index, row in avg_prices.iterrows():
+    plt.text(index, row['price'] + 1, f"${row['price']:.0f}", ha='center', fontsize=8)
+
+plt.tight_layout()
+plt.show()
+
+
+df = pd.read_csv('RealEstate-USA.csv', delimiter=",")
+print(df.columns)
+
+print(df)
+
+print("df-data types", df.dtypes)
+
+print("df.info():   ", df.info())
+
+data = np.genfromtxt(
+    'RealEstate-USA.csv',
+    delimiter=',',
+    skip_header=1,
+    usecols=1,           
+    dtype=float
+)
+import random
+df['year'] = random.choices(range(2015, 2024), k=len(df))
+
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=df, x='city', y='price', estimator='mean', ci=None)
+plt.title("Line Plot: City vs Price")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+sns.catplot(data=df, x='city', y='price', kind='box', height=6, aspect=2)
+plt.xticks(rotation=45)
+plt.title("Categorical Plot (Box): City vs Price")
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(12, 6))
+sns.kdeplot(data=df, x='zip_code', y='price', fill=True)
+plt.title("KDE Plot: Zip Code vs Price")
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(12, 6))
+sns.scatterplot(data=df, x='zip_code', y='price')
+plt.title("Scatter Plot: Zip Code vs Price")
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(12, 6))
+sns.barplot(data=df, x='zip_code', y='price', estimator='mean', ci=None)
+plt.title("Bar Plot: Zip Code vs Price")
+plt.tight_layout()
+plt.xticks(rotation=45)
+plt.show()
+
+pivot = df.pivot_table(values='price', index='zip_code', columns='city', aggfunc='mean')
+plt.figure(figsize=(10, 6))
+sns.heatmap(pivot, annot=True, fmt=".0f", cmap="YlGnBu")
+plt.title("Heatmap: Zip Code vs City (Avg Price)")
+plt.tight_layout()
+plt.show()
+
+themes = ['darkgrid', 'whitegrid', 'dark', 'white', 'ticks']
+
+for theme in themes:
+    sns.set_theme(style=theme)
+    plt.figure(figsize=(10, 5))
+    sns.lineplot(data=df, x='city', y='price', estimator='mean', ci=None)
+    plt.title(f"Theme: {theme}")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
+for style in themes:
+    sns.set_style(style)
+    plt.figure(figsize=(10, 5))
+    sns.barplot(data=df, x='city', y='price', estimator='mean', ci=None)
+    plt.title(f"Bar Plot Style: {style}")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
+custom_style = {
+    "axes.facecolor": "#F6F2F7",
+    "axes.edgecolor": "black",
+    "axes.grid": True,
+    "axes.grid.axis": "y",
+    "axes.labelcolor": "black",
+    "axes.labelsize": "large",
+    "axes.titlesize": 14,
+    "xtick.color": "blue",
+    "ytick.color": "green",
+    "font.family": "monospace",
+    "font.size": 11,
+    "grid.color": "gray",
+    "grid.linewidth": 0.5,
+    "legend.frameon": True,
+    "figure.figsize": (10, 5)
+}
+
+for i in range(15):
+    sns.set_theme(rc=custom_style)
+    plt.figure()
+    sns.barplot(data=df, x='city', y='price', estimator='mean', ci=None)
+    plt.title(f"Custom Theme Bar Plot #{i+1}")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
